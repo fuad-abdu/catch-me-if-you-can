@@ -1,67 +1,68 @@
-import { useState, useRef, useEffect } from "react";
-import "./App.css";
-
+import { useEffect, useState } from "react";
+import "./App.css"
 export default function App() {
-  const buttonRef = useRef(null);
-  const [pos, setPos] = useState({ x: "50%", y: "50%" });
+  const [buttonPosition, setButtonPosition] = useState({ top: "50%", left: "50%" });
+  const [lastClickTime, setLastClickTime] = useState(null);
+  const [currentTime, setCurrentTime] = useState(null);
+  const [bestTime, setBestTime] = useState(() => {
+    const storedBest = localStorage.getItem("bestTime");
+    return storedBest ? parseFloat(storedBest) : null;
+  });
 
-  // Move button randomly
+  // Move button to a random position
   const moveButton = () => {
-    const button = buttonRef.current;
-    const btnWidth = button.offsetWidth;
-    const btnHeight = button.offsetHeight;
-
-    const newX = Math.random() * (window.innerWidth - btnWidth);
-    const newY = Math.random() * (window.innerHeight - btnHeight);
-
-    setPos({ x: `${newX}px`, y: `${newY}px` });
+    const top = Math.random() * 80 + "%";
+    const left = Math.random() * 80 + "%";
+    setButtonPosition({ top, left });
   };
 
-  // For mobile touch detection
-  const handleTouch = (e) => {
-    const touch = e.touches[0];
-    const button = buttonRef.current;
-    const rect = button.getBoundingClientRect();
+  // Handle button click
+  const handleClick = () => {
+    const now = Date.now();
+    if (lastClickTime) {
+      const timeTaken = (now - lastClickTime) / 1000;
+      setCurrentTime(timeTaken);
 
-    const distance = Math.hypot(
-      touch.clientX - (rect.left + rect.width / 2),
-      touch.clientY - (rect.top + rect.height / 2)
-    );
-
-    if (distance < 80) moveButton();
+      if (!bestTime || timeTaken < bestTime) {
+        setBestTime(timeTaken);
+        localStorage.setItem("bestTime", timeTaken);
+      }
+    }
+    setLastClickTime(now);
+    moveButton();
   };
 
-  // For desktop mouse detection
-  const handleMouseMove = (e) => {
-    const button = buttonRef.current;
-    const rect = button.getBoundingClientRect();
-
-    const distance = Math.hypot(
-      e.clientX - (rect.left + rect.width / 2),
-      e.clientY - (rect.top + rect.height / 2)
-    );
-
-    if (distance < 80) moveButton();
-  };
-
+  // Start game on load
   useEffect(() => {
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("touchmove", handleTouch);
-    return () => {
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("touchmove", handleTouch);
-    };
+    moveButton();
+    setLastClickTime(Date.now());
   }, []);
 
   return (
-    <div className="app">
+    <div>
+      <div className="head">
+        <h1 className="title">Catch Me If You Can 🎯</h1>
+      <p className="title">Click the button as fast as you can!</p>
+      </div>
+      <div className="scoreboard">
+        <p>Best Time: {bestTime ? `${bestTime.toFixed(3)}s` : "--"}</p>
+        <p>Current Time: {currentTime ? `${currentTime.toFixed(3)}s` : "--"}</p>
+      </div>
+
       <button
-        ref={buttonRef}
-        onClick={() => alert("You win!")}
-        style={{ position: "absolute", left: pos.x, top: pos.y }}
-        className="escape-btn"
+        onClick={handleClick}
+        style={{
+          position: "absolute",
+          top: buttonPosition.top,
+          left: buttonPosition.left,
+          transform: "translate(-50%, -50%)",
+          padding: "15px 25px",
+          fontSize: "16px",
+          border: "none",
+          cursor: "pointer"
+        }}
       >
-        Catch Me!
+        Click Me
       </button>
     </div>
   );

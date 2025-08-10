@@ -1,21 +1,65 @@
-.app {
-  margin: -10px;
-  height: 100vh;
-  width: 100vw;
-  background: #ffeaa7;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
+.title{
+  color: white;
+  margin: 20px;
 }
 
-.escape-btn {
-  padding: 15px 25px;
-  font-size: 1.2em;
-  background: #d63031;
+.score{
+  color: white;
+  margin: 20px;
+}
+
+body {
+  background: linear-gradient(135deg, #6e8efb, #a777e3);
+  background-size: 200% 200%;
+  animation: gradientShift 6s ease infinite;
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+button {
+  background: linear-gradient(45deg, #ff0c20, #eec81d);
   color: white;
   border: none;
-  border-radius: 8px;
-  position: absolute;
-  transition: transform 0.2s;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0px 8px 15px rgba(0,0,0,0.2);
+}
+
+button:hover {
+  transform: scale(1.1);
+  box-shadow: 0px 12px 20px rgba(0,0,0,0.3);
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+.scoreboard {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 15px;
+  padding: 15px 30px;
+  color: white;
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: space-between;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+@keyframes popIn {
+  0% { transform: scale(0); }
+  100% { transform: scale(1); }
+}
+button {
+  animation: popIn 0.3s ease;
 }
