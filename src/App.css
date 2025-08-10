@@ -1,0 +1,21 @@
+.app {
+  margin: -10px;
+  height: 100vh;
+  width: 100vw;
+  background: #ffeaa7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.escape-btn {
+  padding: 15px 25px;
+  font-size: 1.2em;
+  background: #d63031;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  position: absolute;
+  transition: transform 0.2s;
+}
